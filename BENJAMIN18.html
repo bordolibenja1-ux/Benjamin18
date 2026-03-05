@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Benjamín - Mis 18</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:#000;
+color:white;
+text-align:center;
+}
+
+section{
+padding:60px 20px;
+}
+
+h1{
+font-size:40px;
+letter-spacing:3px;
+}
+
+h2{
+margin-bottom:30px;
+}
+
+.hero{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:linear-gradient(180deg,#000,#111);
+}
+
+.countdown{
+display:flex;
+gap:15px;
+margin-top:30px;
+}
+
+.box{
+background:#111;
+padding:20px;
+border-radius:10px;
+min-width:70px;
+}
+
+.number{
+font-size:28px;
+font-weight:bold;
+}
+
+.label{
+font-size:12px;
+opacity:0.7;
+}
+
+.dress{
+display:flex;
+flex-direction:column;
+gap:20px;
+}
+
+.dress img{
+width:100%;
+border-radius:10px;
+}
+
+.location{
+background:#111;
+padding:40px 20px;
+}
+
+.button{
+margin-top:20px;
+background:white;
+color:black;
+padding:15px 25px;
+border-radius:30px;
+text-decoration:none;
+font-weight:bold;
+display:inline-block;
+}
+
+.button:hover{
+opacity:0.8;
+}
+
+footer{
+padding:30px;
+font-size:12px;
+opacity:0.6;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<section class="hero">
+
+<h1>BENJAMÍN</h1>
+<h2>Mis 18</h2>
+
+<div class="countdown">
+
+<div class="box">
+<div id="days" class="number">0</div>
+<div class="label">DÍAS</div>
+</div>
+
+<div class="box">
+<div id="hours" class="number">0</div>
+<div class="label">HORAS</div>
+</div>
+
+<div class="box">
+<div id="minutes" class="number">0</div>
+<div class="label">MIN</div>
+</div>
+
+<div class="box">
+<div id="seconds" class="number">0</div>
+<div class="label">SEG</div>
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2>Dress Code</h2>
+
+<p>Elegante</p>
+
+<div class="dress">
+
+<div>
+<img src="https://share.google/iz2hitEYiu8JfkBEW">
+<p>Hombres</p>
+</div>
+
+<div>
+<img src="https://share.google/if0y0sfBEELei6K7G">
+<p>Mujeres</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="location">
+
+<h2>Ubicación</h2>
+
+<p>Salta 335</p>
+
+<a class="button"
+href="https://www.google.com/maps/search/?api=1&query=Salta+335"
+target="_blank">
+
+Ver ubicación en Google Maps
+
+</a>
+
+</section>
+
+<footer>
+
+Los 18 de Benjamín · 2 de Abril 2027
+
+</footer>
+
+<script>
+
+const targetDate = new Date("April 2, 2027 00:00:00").getTime();
+
+function updateCountdown(){
+
+const now = new Date().getTime();
+
+const distance = targetDate - now;
+
+const second = 1000;
+const minute = second * 60;
+const hour = minute * 60;
+const day = hour * 24;
+
+document.getElementById("days").innerText =
+Math.floor(distance / day);
+
+document.getElementById("hours").innerText =
+Math.floor((distance % day) / hour);
+
+document.getElementById("minutes").innerText =
+Math.floor((distance % hour) / minute);
+
+document.getElementById("seconds").innerText =
+Math.floor((distance % minute) / second);
+
+}
+
+setInterval(updateCountdown,1000);
+
+</script>
+
+</body>
+</html>
