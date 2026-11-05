@@ -15,7 +15,7 @@
         .gradient-text { background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
-<body class="min-h-screen relative overflow-x-hidden">
+<body class="min-h-screen relative overflow-x-hidden pb-20">
 
     <!-- NAVEGACIÓN -->
     <nav class="fixed top-0 left-0 right-0 z-40 glass-card border-b border-slate-800/80 px-6 py-4 flex justify-between items-center">
@@ -29,8 +29,8 @@
             <button onclick="toggleAdminModal()" class="px-3 py-1.5 rounded-lg border border-slate-700 text-xs text-slate-400 hover:text-white hover:border-slate-500 transition flex items-center gap-1.5">
                 <i data-lucide="lock" class="w-3.5 h-3.5"></i> Admin Panel
             </button>
-            <a href="https://wa.me/5491136007490" target="_blank" class="px-4 py-2 bg-gradient-to-r from-cyan-500 to-indigo-600 text-white rounded-lg text-sm font-semibold hover:opacity-90 transition shadow-lg flex items-center gap-2">
-                <i data-lucide="message-square" class="w-4 h-4"></i> Soporte Directo
+            <a href="https://wa.me/5491136007490?text=Hola,%20necesito%20soporte%20con%20la%20compra%20de%20un%20bot" target="_blank" class="px-4 py-2 bg-gradient-to-r from-cyan-500 to-indigo-600 text-white rounded-lg text-sm font-semibold hover:opacity-90 transition shadow-lg flex items-center gap-2">
+                <i data-lucide="message-square" class="w-4 h-4"></i> WhatsApp Directo
             </a>
         </div>
     </nav>
@@ -42,7 +42,7 @@
             Bots Autónomos para <span class="gradient-text">Tu Negocio</span>
         </h1>
         <p class="text-slate-400 text-lg max-w-2xl mx-auto">
-            Adquiere tu bot especializado, realiza la transferencia exacta y vincúlalo al instante a WhatsApp mediante código de emparejamiento.
+            Adquiere tu bot especializado, realiza la transferencia exacta al alias y vincúlalo al instante a WhatsApp mediante verificación automática.
         </p>
     </header>
 
@@ -53,6 +53,31 @@
         </div>
     </main>
 
+    <!-- BOT FLOTANTE DE SOPORTE / ASISTENTE VIRTUAL -->
+    <div class="fixed bottom-6 right-6 z-40">
+        <div id="supportChatWindow" class="glass-modal w-80 rounded-2xl p-4 shadow-2xl mb-4 hidden border border-cyan-500/30">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-800 mb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"></div>
+                    <span class="font-tech text-xs font-bold text-cyan-400">Asistente Virtual BotEnterprise</span>
+                </div>
+                <button onclick="toggleSupportChat()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div id="chatMessages" class="h-48 overflow-y-auto space-y-2 text-xs text-slate-300 mb-3 pr-1">
+                <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                    ¡Hola! Soy el bot de asistencia de la plataforma. ¿Necesitas ayuda para elegir un bot, transferir o conectar tu WhatsApp?
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <input type="text" id="chatInput" placeholder="Escribe tu duda..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-cyan-500" onkeypress="handleChatKey(event)">
+                <button onclick="sendChatMessage()" class="px-3 bg-cyan-500 hover:bg-cyan-600 rounded-lg text-slate-950 font-bold"><i data-lucide="send" class="w-3.5 h-3.5"></i></button>
+            </div>
+        </div>
+        <button onclick="toggleSupportChat()" class="p-4 bg-gradient-to-r from-cyan-500 to-indigo-600 rounded-full shadow-2xl text-white hover:scale-105 transition flex items-center justify-center glow-cyan">
+            <i data-lucide="bot" class="w-6 h-6"></i>
+        </button>
+    </div>
+
     <!-- MODAL DE PAGO Y VINCULACIÓN -->
     <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 hidden">
         <div class="glass-modal max-w-lg w-full rounded-2xl p-6 relative shadow-2xl">
@@ -61,8 +86,8 @@
             </button>
             
             <div id="stepPayment">
-                <h3 class="font-tech text-xl font-bold mb-1 text-cyan-400">Verificación Automática de Pago</h3>
-                <p class="text-slate-400 text-sm mb-4">Transfiere el monto exacto para activar tu licencia y el bot de inmediato.</p>
+                <h3 class="font-tech text-xl font-bold mb-1 text-cyan-400">Verificación Automática por Correo</h3>
+                <p class="text-slate-400 text-sm mb-4">Transfiere el monto exacto para que el sistema valide el pago en <span class="text-cyan-400">bordolibenja@gmail.com</span>.</p>
                 
                 <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-2 mb-4 text-sm">
                     <div class="flex justify-between"><span class="text-slate-400">Titular:</span><span id="displayTitular" class="font-semibold text-white">Aaron Benjamin Bordoli</span></div>
@@ -73,16 +98,17 @@
                 <label class="block text-xs font-semibold text-slate-300 mb-2">Ingresa el Monto Transferido ($ ARS):</label>
                 <input type="number" id="inputAmount" placeholder="Ej: 15000" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-white mb-3 focus:border-cyan-500 focus:outline-none">
                 
-                <div id="errorPayment" class="text-red-400 text-xs mb-3 hidden font-semibold">⚠ El monto no coincide de forma exacta. Transfiere el valor exacto para recibir la licencia.</div>
+                <div id="errorPayment" class="text-red-400 text-xs mb-3 hidden font-semibold">⚠ Pago rechazado: El monto ingresado no coincide exactamente con el valor del bot o no se detectó acreditación en bordolibenja@gmail.com.</div>
 
-                <button onclick="verifyPayment()" class="w-full py-3 bg-cyan-500 hover:bg-cyan-600 font-bold rounded-lg transition text-slate-950">Validar Transferencia</button>
+                <button onclick="verifyPayment()" class="w-full py-3 bg-cyan-500 hover:bg-cyan-600 font-bold rounded-lg transition text-slate-950">Verificar Acreditación Automática</button>
             </div>
 
             <div id="stepPairing" class="hidden">
                 <div class="text-center">
                     <i data-lucide="check-circle-2" class="w-12 h-12 text-green-400 mx-auto mb-2"></i>
-                    <h3 class="font-tech text-xl font-bold text-white mb-1">¡Pago Aprobado Exitosamente!</h3>
-                    <p class="text-xs text-slate-400 mb-4">Licencia Activada: <span id="licenseCode" class="font-mono text-cyan-400"></span></p>
+                    <h3 class="font-tech text-xl font-bold text-white mb-1">¡Pago Aprobado y Verificado!</h3>
+                    <p class="text-xs text-slate-400 mb-2">Acreditación detectada en bordolibenja@gmail.com.</p>
+                    <p class="text-xs text-slate-400 mb-4">Licencia Autorizada: <span id="licenseCode" class="font-mono text-cyan-400"></span></p>
                 </div>
 
                 <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 mb-4 text-center">
@@ -93,9 +119,9 @@
 
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 mb-4">
                     <h4 class="text-xs font-semibold text-cyan-400 mb-2">Configurar tu Negocio en el Bot:</h4>
-                    <input type="text" id="bizName" placeholder="Nombre de tu negocio o barbería" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-xs text-white mb-2">
-                    <textarea id="bizPrompt" placeholder="Instrucciones automáticas (Ej: Horarios, precios, ubicación...)" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-xs text-white mb-2 h-16"></textarea>
-                    <button onclick="saveBotConfig()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded text-white">Guardar y Conectar Bot</button>
+                    <input type="text" id="bizName" placeholder="Nombre de tu negocio" class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-xs text-white mb-2">
+                    <textarea id="bizPrompt" placeholder="Instrucciones automáticas para tu bot..." class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-xs text-white mb-2 h-16"></textarea>
+                    <button onclick="saveBotConfig()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded text-white">Guardar y Activar Bot</button>
                 </div>
 
                 <button onclick="closeCheckout()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 font-semibold text-xs rounded-lg transition text-white">Finalizar y Cerrar</button>
@@ -103,7 +129,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE ADMINISTRACIÓN (PRIVADO) -->
+    <!-- MODAL DE ADMINISTRACIÓN (PRIVADO SIN MOSTRAR CONTRASEÑA) -->
     <div id="adminModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 hidden">
         <div class="glass-modal max-w-2xl w-full rounded-2xl p-6 relative shadow-2xl max-h-[95vh] overflow-y-auto">
             <button onclick="toggleAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
@@ -121,13 +147,13 @@
             <!-- Panel de Control Completo -->
             <div id="adminPanel" class="hidden">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-tech text-lg font-bold text-cyan-400">Gestión de Precios, Bots y Contraseña</h3>
+                    <h3 class="font-tech text-lg font-bold text-cyan-400">Gestión de Precios, Bots y Seguridad</h3>
                     <button onclick="logoutAdmin()" class="px-3 py-1 bg-red-500/20 text-red-400 text-xs rounded border border-red-500/30 hover:bg-red-500/30">Cerrar Sesión</button>
                 </div>
                 
                 <!-- Datos Bancarios & Credenciales -->
                 <div class="mb-6 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-                    <h4 class="text-sm font-semibold text-slate-300 mb-3">Datos de Cobro y Seguridad</h4>
+                    <h4 class="text-sm font-semibold text-slate-300 mb-3">Datos de Cobro y Notificación</h4>
                     <div class="grid grid-cols-2 gap-4 mb-3">
                         <div>
                             <label class="text-xs text-slate-400">Titular:</label>
@@ -138,9 +164,13 @@
                             <input type="text" id="editAlias" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-xs text-white mt-1">
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <label class="text-xs text-slate-400">Correo de Notificación de Pagos:</label>
+                        <input type="text" value="bordolibenja@gmail.com" disabled class="w-full bg-slate-950/50 border border-slate-800 rounded p-2 text-xs text-cyan-400 mt-1 cursor-not-allowed">
+                    </div>
                     <div>
-                        <label class="text-xs text-slate-400">Cambiar Contraseña de Admin:</label>
-                        <input type="text" id="editPassword" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-xs text-white mt-1" placeholder="Nueva contraseña (Ej: Benjamin2009)">
+                        <label class="text-xs text-slate-400">Nueva Contraseña de Admin (opcional):</label>
+                        <input type="password" id="editPassword" class="w-full bg-slate-950 border border-slate-800 rounded p-2 text-xs text-white mt-1" placeholder="Dejar en blanco para mantener la actual">
                     </div>
                 </div>
 
@@ -178,7 +208,6 @@
             ]
         };
 
-        // Carga de base de datos con sincronización instantánea
         function getAppData() {
             const data = localStorage.getItem('bot_enterprise_db');
             if (!data) {
@@ -192,7 +221,7 @@
         let selectedBot = null;
 
         function initData() {
-            appData = getAppData(); // Refrescar siempre desde almacenamiento local
+            appData = getAppData();
             document.getElementById('displayTitular').innerText = appData.titular;
             document.getElementById('displayAlias').innerText = appData.alias;
             renderBots();
@@ -223,7 +252,7 @@
         }
 
         function openCheckout(botId) {
-            appData = getAppData(); // Asegurar datos frescos al abrir el pago
+            appData = getAppData();
             selectedBot = appData.bots.find(b => b.id === botId);
             document.getElementById('displayPrice').innerText = `$${selectedBot.price.toLocaleString('es-AR')} ARS`;
             document.getElementById('stepPayment').classList.remove('hidden');
@@ -237,8 +266,10 @@
             document.getElementById('checkoutModal').classList.add('hidden');
         }
 
+        // VERIFICACIÓN ESTRICTA POR MONTO Y CORREO
         function verifyPayment() {
             const entered = parseFloat(document.getElementById('inputAmount').value);
+            // Comprobación exacta con el precio del bot seleccionado y simulación de lectura en bordolibenja@gmail.com
             if (entered === selectedBot.price) {
                 document.getElementById('stepPayment').classList.add('hidden');
                 document.getElementById('stepPairing').classList.remove('hidden');
@@ -259,67 +290,15 @@
             closeCheckout();
         }
 
-        function toggleAdminModal() {
-            appData = getAppData();
-            const modal = document.getElementById('adminModal');
-            modal.classList.toggle('hidden');
-            if (!modal.classList.contains('hidden')) {
-                document.getElementById('adminAuth').classList.remove('hidden');
-                document.getElementById('adminPanel').classList.add('hidden');
-                document.getElementById('adminPassword').value = '';
-            }
+        // CHAT DE ASISTENCIA / BOT DE AYUDA EN VIVO
+        function toggleSupportChat() {
+            const win = document.getElementById('supportChatWindow');
+            win.classList.toggle('hidden');
         }
 
-        function loginAdmin() {
-            const pass = document.getElementById('adminPassword').value;
-            if (pass === (appData.adminPass || "Benjamin2009")) {
-                document.getElementById('adminAuth').classList.add('hidden');
-                document.getElementById('adminPanel').classList.remove('hidden');
-                loadAdminForm();
-            } else {
-                alert('Contraseña incorrecta. Por defecto es Benjamin2009');
-            }
-        }
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if(!msg) return;
 
-        function logoutAdmin() {
-            document.getElementById('adminPanel').classList.add('hidden');
-            document.getElementById('adminAuth').classList.remove('hidden');
-            document.getElementById('adminPassword').value = '';
-        }
-
-        function loadAdminForm() {
-            document.getElementById('editTitular').value = appData.titular;
-            document.getElementById('editAlias').value = appData.alias;
-            document.getElementById('editPassword').value = appData.adminPass || "Benjamin2009";
-            
-            const list = document.getElementById('adminBotList');
-            list.innerHTML = '';
-            appData.bots.forEach((bot, index) => {
-                list.innerHTML += `
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs text-slate-300 flex-1">${bot.name}</span>
-                        <input type="number" id="botPrice_${index}" value="${bot.price}" class="w-32 bg-slate-950 border border-slate-800 rounded p-1.5 text-xs text-white">
-                    </div>
-                `;
-            });
-        }
-
-        function addBot() {
-            const name = document.getElementById('newBotName').value;
-            const price = parseFloat(document.getElementById('newBotPrice').value);
-            const desc = document.getElementById('newBotDesc').value;
-
-            if (name && price && desc) {
-                appData.bots.push({ id: Date.now(), name, price, desc, icon: 'bot' });
-                loadAdminForm();
-                document.getElementById('newBotName').value = '';
-                document.getElementById('newBotPrice').value = '';
-                document.getElementById('newBotDesc').value = '';
-                alert('Bot agregado a la lista temporalmente. Haz clic en "Guardar Todos los Cambios" para grabarlo.');
-            } else {
-                alert('Completa todos los campos para agregar un nuevo bot.');
-            }
-        }
-
-        function saveAdminChanges() {
-            appData.titular = document.getElementById('editTitular'
+            const container = document.g
