@@ -1,0 +1,14 @@
+{
+  "name": "botenterprise-saas",
+  "version": "1.0.0",
+  "description": "Plataforma SaaS de Bots de IA con validación por Telegram y Autoresponder WhatsApp",
+  "main": "bot_whatsapp_autoresponder.js",
+  "scripts": {
+    "start": "node bot_whatsapp_autoresponder.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.12",
+    "@supabase/supabase-js": "^2.45.0",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
