@@ -49,7 +49,7 @@
     <!-- CATÁLOGO DE BOTS -->
     <main class="max-w-7xl mx-auto px-6 pb-24">
         <div id="botsContainer" class="grid md:grid-cols-3 gap-8">
-            <!-- Se cargan dinámicamente desde JS -->
+            <!-- Se cargan dinámicamente -->
         </div>
     </main>
 
@@ -178,10 +178,21 @@
             ]
         };
 
-        let appData = JSON.parse(localStorage.getItem('bot_enterprise_db')) || DEFAULT_CONFIG;
+        // Carga de base de datos con sincronización instantánea
+        function getAppData() {
+            const data = localStorage.getItem('bot_enterprise_db');
+            if (!data) {
+                localStorage.setItem('bot_enterprise_db', JSON.stringify(DEFAULT_CONFIG));
+                return DEFAULT_CONFIG;
+            }
+            return JSON.parse(data);
+        }
+
+        let appData = getAppData();
         let selectedBot = null;
 
         function initData() {
+            appData = getAppData(); // Refrescar siempre desde almacenamiento local
             document.getElementById('displayTitular').innerText = appData.titular;
             document.getElementById('displayAlias').innerText = appData.alias;
             renderBots();
@@ -212,6 +223,7 @@
         }
 
         function openCheckout(botId) {
+            appData = getAppData(); // Asegurar datos frescos al abrir el pago
             selectedBot = appData.bots.find(b => b.id === botId);
             document.getElementById('displayPrice').innerText = `$${selectedBot.price.toLocaleString('es-AR')} ARS`;
             document.getElementById('stepPayment').classList.remove('hidden');
@@ -248,6 +260,7 @@
         }
 
         function toggleAdminModal() {
+            appData = getAppData();
             const modal = document.getElementById('adminModal');
             modal.classList.toggle('hidden');
             if (!modal.classList.contains('hidden')) {
@@ -309,23 +322,4 @@
         }
 
         function saveAdminChanges() {
-            appData.titular = document.getElementById('editTitular').value;
-            appData.alias = document.getElementById('editAlias').value;
-            const newPass = document.getElementById('editPassword').value;
-            if(newPass) appData.adminPass = newPass;
-
-            appData.bots.forEach((bot, index) => {
-                const newPrice = parseFloat(document.getElementById(`botPrice_${index}`).value);
-                if (!isNaN(newPrice)) bot.price = newPrice;
-            });
-
-            localStorage.setItem('bot_enterprise_db', JSON.stringify(appData));
-            initData();
-            toggleAdminModal();
-            alert('¡Configuración y base de datos guardadas exitosamente de por vida!');
-        }
-
-        window.onload = initData;
-    </script>
-</body>
-</html>
+            appData.titular = document.getElementById('editTitular'
